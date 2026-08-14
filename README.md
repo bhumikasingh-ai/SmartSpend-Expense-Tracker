@@ -37,10 +37,11 @@ GitHub: [@bhumikasingh-ai](https://github.com/bhumikasingh-ai)
 
 ## 📂 Project Structure
 
-```text
+
 SmartSpend-Expense-Tracker/
-│
+
 └── index.html
+ ``` 
 🚀 How to Use
 Open the live demo.
 Enter the transaction description.
