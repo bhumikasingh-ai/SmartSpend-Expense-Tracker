@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SmartSpend</title>
+<style>
+body{font-family:Arial;margin:0;background:#f5f7ff;color:#222}
+header{background:linear-gradient(135deg,#4f46e5,#7c3aed);color:white;padding:30px 20px;border-radius:0 0 25px 25px}
+main{max-width:700px;margin:auto;padding:20px}
+.card{background:white;padding:20px;margin:15px 0;border-radius:18px;box-shadow:0 5px 20px #ddd}
+.balance{font-size:32px;font-weight:bold}
+.cards{display:flex;gap:10px}
+.cards .card{flex:1}
+input,select,button{width:100%;padding:13px;margin:6px 0;border:1px solid #ddd;border-radius:10px;box-sizing:border-box}
+button{background:#4f46e5;color:white;border:0;font-weight:bold}
+.income{color:green}.expense{color:red}
+.item{padding:12px 0;border-bottom:1px solid #eee}
+</style>
+</head>
+
+<body>
+<header>
+<h1>💰 SmartSpend</h1>
+<p>Smart Personal Expense Tracker</p>
+</header>
+
+<main>
+
+<div class="card">
+<small>Current Balance</small>
+<div class="balance" id="bal">₹0</div>
+</div>
+
+<div class="cards">
+<div class="card">
+<small>Income</small>
+<h3 class="income" id="inc">₹0</h3>
+</div>
+<div class="card">
+<small>Expenses</small>
+<h3 class="expense" id="exp">₹0</h3>
+</div>
+</div>
+
+<div class="card">
+<h2>➕ Add Transaction</h2>
+
+<input id="name" placeholder="What did you spend on?">
+
+<input id="amount" type="number" placeholder="Amount">
+
+<select id="type">
+<option value="expense">Expense</option>
+<option value="income">Income</option>
+</select>
+
+<select id="cat">
+<option>Food</option>
+<option>Education</option>
+<option>Travel</option>
+<option>Shopping</option>
+<option>Bills</option>
+<option>Other</option>
+</select>
+
+<button onclick="add()">Add Transaction</button>
+</div>
+
+<div class="card">
+<h2>📋 Transactions</h2>
+<div id="list">No transactions yet.</div>
+</div>
+
+</main>
+
+<script>
+let data=JSON.parse(localStorage.getItem("spend"))||[];
+
+function add(){
+let n=document.getElementById("name").value;
+let a=Number(document.getElementById("amount").value);
+let t=document.getElementById("type").value;
+let c=document.getElementById("cat").value;
+
+if(!n||!a){alert("Please enter title and amount");return}
+
+data.push({n,a,t,c});
+localStorage.setItem("spend",JSON.stringify(data));
+
+document.getElementById("name").value="";
+document.getElementById("amount").value="";
+show();
+}
+
+function show(){
+let income=0,expense=0;
+
+data.forEach(x=>{
+if(x.t=="income")income+=x.a;
+else expense+=x.a;
+});
+
+document.getElementById("inc").innerText="₹"+income;
+document.getElementById("exp").innerText="₹"+expense;
+document.getElementById("bal").innerText="₹"+(income-expense);
+
+let html="";
+data.slice().reverse().forEach(x=>{
+html+=`<div class="item">
+<b>${x.c} • ${x.n}</b><br>
+<span class="${x.t}">${x.t=="income"?"+":"-"}₹${x.a}</span>
+</div>`;
+});
+
+document.getElementById("list").innerHTML=html||"No transactions yet.";
+}
+
+show();
+</script>
+
+</body>
+</html>
